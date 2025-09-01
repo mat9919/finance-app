@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>แอป รายรับ-รายจ่าย ส่วนบุคคล</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    :root {
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --text: #e0e0e0;
+      --text-secondary: #aaaaaa;
+      --accent: #bb86fc;
+      --income: #4caf50;
+      --expense: #f44336;
+      --border: #333;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    header {
+      background-color: var(--card-bg);
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    .summary {
+      background-color: var(--card-bg);
+      padding: 1.2rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .summary h2 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary .amount {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+
+    .summary.income { color: var(--income); }
+    .summary.expense { color: var(--expense); }
+
+    .menu {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .menu-btn {
+      flex: 1;
+      min-width: 120px;
+      padding: 1rem;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .menu-btn:hover {
+      background-color: #2d2d2d;
+    }
+
+    .menu-btn i {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .submenu {
+      display: none;
+      background-color: var(--card-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    .submenu.active {
+      display: block;
+    }
+
+    .submenu-item {
+      padding: 0.8rem;
+      margin: 0.3rem 0;
+      background-color: #2a2a2a;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      transition: background 0.2s;
+    }
+
+    .submenu-item:hover {
+      background-color: #3a3a3a;
+    }
+
+    .submenu-item i {
+      width: 24px;
+      text-align: center;
+    }
+
+    .logo {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    .total-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      background-color: var(--accent);
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      margin-top: 1rem;
+      cursor: pointer;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+
+    .total-btn.income { background-color: var(--income); color: white; }
+    .total-btn.expense { background-color: var(--expense); color: white; }
+
+    .history {
+      margin-top: 2rem;
+      background-color: var(--card-bg);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .history h3 {
+      margin-bottom: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .record {
+      padding: 0.6rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+    }
+
+    .record.income { color: var(--income); }
+    .record.expense { color: var(--expense); }
+
+    .record span {
+      float: right;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem;
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      margin-top: 2rem;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <h1><i class="fas fa-wallet"></i> รายรับ-รายจ่าย ส่วนบุคคล</h1>
+    <p id="current-date">กรกฎาคม 2567</p>
+  </header>
+
+  <div class="container">
+
+    <!-- สรุปยอด -->
+    <div class="summary income">
+      <h2>รวมรายรับ</h2>
+      <div class="amount" id="total-income">0.00 บาท</div>
+    </div>
+
+    <div class="summary expense">
+      <h2>รวมรายจ่าย</h2>
+      <div class="amount" id="total-expense">0.00 บาท</div>
+    </div>
+
+    <!-- เมนูหลัก -->
+    <div class="menu">
+      <div class="menu-btn" onclick="toggleSubmenu('income-submenu')">
+        <i class="fas fa-arrow-down"></i>
+        รายรับ
+      </div>
+      <div class="menu-btn" onclick="toggleSubmenu('expense-submenu')">
+        <i class="fas fa-arrow-up"></i>
+        รายจ่าย
+      </div>
+    </div>
+
+    <!-- เมนูย่อย รายรับ -->
+    <div id="income-submenu" class="submenu">
+      <div class="submenu-item" onclick="addTransaction('income', 'เงินเดือน')">
+        <i class="fas fa-building"></i> เงินเดือน
+      </div>
+      <div class="submenu-item" onclick="addTransaction('income', 'รายรับอื่น')">
+        <i class="fas fa-coins"></i> รายรับอื่น
+      </div>
+      <button class="total-btn income" onclick="alert('รวมรายรับ: ' + document.getElementById('total-income').textContent)">
+        ดูรวมรายรับ
+      </button>
+    </div>
+
+    <!-- เมนูย่อย รายจ่าย -->
+    <div id="expense-submenu" class="submenu">
+      <div class="submenu-item" onclick="addTransaction('expense', 'ค่าน้ำ')">
+        <i class="fas fa-tint"></i> ค่าน้ำ
+      </div>
+      <div class="submenu-item" onclick="addTransaction('expense', 'ค่าไฟ')">
+        <i class="fas fa-bolt"></i> ค่าไฟ
+      </div>
+      <div class="submenu-item" onclick="toggleSubmenu('card-submenu')">
+        <i class="fas fa-credit-card"></i> บัตรเครดิต
+      </div>
+      <div class="submenu-item" onclick="toggleSubmenu('shopee-submenu')">
+        <i class="fab fa-shopify"></i> Shopee
+      </div>
+      <div class="submenu-item" onclick="addTransaction('expense', 'จ่ายค่าเรียนหลาน')">
+        <i class="fas fa-book"></i> จ่ายค่าเรียนหลาน
+      </div>
+      <div class="submenu-item" onclick="addTransaction('expense', 'จ่ายให้แม่')">
+        <i class="fas fa-heart"></i> จ่ายให้แม่
+      </div>
+      <button class="total-btn expense" onclick="alert('รวมรายจ่าย: ' + document.getElementById('total-expense').textContent)">
+        ดูรวมรายจ่าย
+      </button>
+    </div
